@@ -67,5 +67,5 @@ bcftools mpileup -o <output_file>.bcf.vcf -f <reference>.fasta -a AD,DP -T <inpu
 Then with the .snp.vcf and the .bcf.vcf files as input the python script "add_variant_depth.py" it will return a .snp.depth.vcf file as output with DP and AD columns in the SAMPLE column
 
 ```bash
-python add_variant_depth.py <input_file>.snp.vcf <input_file>.bcf.vcf
+python add_variant_depth.py <input_file>.snp.vcf <input_file>.bcf.vcf <optional_output_file>
 ```
