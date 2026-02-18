@@ -16,14 +16,17 @@ if (
     or not sys.argv[2].lower().endswith(".vcf")
 ):
     print(
-        "\nUsage: python depth_variant_adder.py <snp_input_file.vcf> <bcf_raw_input_file.vcf>"
+        "\nUsage: python depth_variant_adder.py <snp_input_file.vcf> <bcf_raw_input_file.vcf> <output_file>"
     )
     sys.exit(1)
 
 # We add a depth in the name of the output file to differenciate it
 snp_input_file = sys.argv[1]
 bcf_input_file = sys.argv[2]
-output_file = snp_input_file.replace(".vcf", ".depth.vcf")
+if len(sys.argv) >= 4:
+    output_file = sys.argv[3]
+else:
+    output_file = snp_input_file.replace(".vcf", ".depth.vcf")
 
 # We use the pysam.VariantFile to manipulate vcf input files
 snp_vcf_in = ps.VariantFile(snp_input_file)
