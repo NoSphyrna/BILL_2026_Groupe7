@@ -62,6 +62,12 @@ We use the -T option to pass the .snp.vcf file and the -a AD,DP to make sure we 
 ```bash 
 bcftools mpileup -o <output_file>.bcf.vcf -f <reference>.fasta -a AD,DP -T <input_file>.snp.vcf <input_file>.aligned.sorted.bam
 ```
+To execute it on all file directly :
+
+```bash
+srun ./scripts/BILL_2026_Groupe7/BashScripts/bcftoolsmpileup.sh inputs_all/P25/ Analyses/P25/ References/KHV-U_trunc.fasta
+```
+
 ## Python script
 
 Then with the .snp.vcf and the .bcf.vcf files as input the python script "add_variant_depth.py" it will return a .snp.depth.vcf file as output with DP and AD columns in the SAMPLE column
