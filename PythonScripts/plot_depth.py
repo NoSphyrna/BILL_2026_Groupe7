@@ -1,5 +1,5 @@
+import os
 import sys
-from turtle import color
 from typing import Sized
 
 import matplotlib.pyplot as plt
@@ -12,13 +12,14 @@ def safe_len(obj: Sized | None) -> int:
 
 
 # Check if the inputs files are provided and has a .vcf extension
-if len(sys.argv) < 2 or not sys.argv[1].lower().endswith(".vcf"):
-    print("\nUsage: python plot_depth.py <input_file.vcf>")
+if len(sys.argv) < 3 or not sys.argv[1].lower().endswith(".vcf"):
+    print("\nUsage: python plot_depth.py <input_file.vcf> <output_directory_figures>")
     sys.exit(1)
 
 # We add a depth in the name of the output file to differenciate it
 input_file = sys.argv[1]
-output_file = input_file.replace(".vcf", "")
+output_file = os.path.basename(input_file)
+output_directory = sys.argv[2]
 
 # We use the pysam.VariantFile to manipulate vcf input files
 vcf_in = ps.VariantFile(input_file)
@@ -42,29 +43,31 @@ for rec in vcf_in.fetch():
 
 fig, ax1 = plt.subplots(figsize=(20, 10))
 
-color1 = "tab:purple"
-ax1.plot(pos, depths, "-+", color=color1, label="Depth")
+color1 = "tab:green"
+ax1.plot(pos, depths, "-", color=color1, label="Depth")
 ax1.set_xlabel("Variant position")
 ax1.set_ylabel("Depth (DP)", color=color1)
+ax1.tick_params(axis="y", labelcolor=color1)
 
 ax2 = ax1.twinx()
 color2 = "tab:blue"
 ax2.set_ylabel("Phred Quality", color=color2)
-ax2.plot(pos, qual, "-+", color=color2, label="Quality")
+ax2.plot(pos, qual, "-", color=color2, label="Quality")
+ax2.tick_params(axis="y", labelcolor=color2)
 
 plt.title("Depth and Quality according to variants position")
 # plt.legend()
 fig.tight_layout()
-plt.savefig(output_file + "posdepthqual.png")
-plt.show()
+plt.savefig(output_directory + output_file + ".pos_depth_qual.png")
+plt.close()
 
 
 plt.figure(figsize=(10, 10))
 plt.hist(depths, bins=30, edgecolor="black")
 plt.title("Histogram of depths")
 
-plt.savefig(output_file + "hist_depth.png")
-plt.show()
+plt.savefig(output_directory + output_file + ".hist_depth.png")
+plt.close()
 
 
 plt.figure(figsize=(10, 10))
@@ -72,8 +75,8 @@ plt.scatter(qual, depths, alpha=0.6)
 plt.xlabel("Quality")
 plt.ylabel("Depth")
 plt.title("Depth according to Quality")
-plt.savefig(output_file + "depthqual.png")
-plt.show()
+plt.savefig(output_directory + output_file + ".depth_qual.png")
+plt.close()
 # We add the description for depth and allelic depth
 # snp_vcf_in.header.formats.add(
 #     "DP", number=1, type="Integer", description="Number of high-quality bases"
