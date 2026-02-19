@@ -83,3 +83,27 @@ To execute it on all files :
 ```bash
 ./execpython.sh <path/to/pythonscript/>add_variant_depth.py <Input_Directory_snp.vcf> <Input_Directory_bcf.vcf> <Output_Directory>
 ```
+
+## SURVIVOR
+## Merge sniffles.vcf files - for structural variants (indels, dupplication)
+
+First make a list of all *.sniffles.vcf files which you need to merge
+
+```bash
+ls *sniffles.vcf > name_list.txt
+```
+*example*
+
+```bash
+ls *.sv_sniffles.vcf > sv_sniffles.vcf_P25_list.txt
+```
+When execute a command with SURVIVOR (with the parameters to merge the shared and unique variants)
+
+```bash
+SURVIVOR merge name_list.txt 1000 1 1 1 0 0 merged_name_sniffles_samples.vcf
+```
+*example*
+
+```bash
+SURVIVOR merge sv_sniffles.vcf_P27_list.txt 1000 1 1 1 0 0 merged_P27_sniffles_samples.vcf
+```
