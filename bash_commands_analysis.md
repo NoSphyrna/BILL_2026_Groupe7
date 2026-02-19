@@ -57,13 +57,16 @@ First we want a new raw vcf from "bcftools mpileup" directed by the ".snp.vcf" f
 
 To do that we need the bam files (with the .bam.bai index file)
 
-We use the -T option to pass the .snp.vcf file and the -a AD,DP to make sure we get the DP and AD columns in the raw vcf
+We use the -T option to pass the .snp.vcf file and the -a AD,DP to make sure we get the DP and AD columns in the raw vcf and -I option to avoid call of INDELs.
 
 ```bash 
-bcftools mpileup -o <output_file>.bcf.vcf -f <reference>.fasta -a AD,DP -T <input_file>.snp.vcf <input_file>.aligned.sorted.bam
+bcftools mpileup -I -o <output_file>.bcf.vcf -f <reference>.fasta -a AD,DP -T <input_file>.snp.vcf <input_file>.aligned.sorted.bam
 ```
-To execute it on all file directly :
-
+To execute it on all file directly (on cluster with srun):
+```bash
+srun ./bcftoolsmpileup.sh <Input_Directory> <Output_Direcory> <reference>.fasta
+```
+*example*
 ```bash
 srun ./scripts/BILL_2026_Groupe7/BashScripts/bcftoolsmpileup.sh inputs_all/P25/ Analyses/P25/ References/KHV-U_trunc.fasta
 ```
@@ -74,4 +77,9 @@ Then with the .snp.vcf and the .bcf.vcf files as input the python script "add_va
 
 ```bash
 python add_variant_depth.py <input_file>.snp.vcf <input_file>.bcf.vcf <optional_output_file>
+```
+
+To execute it on all files :
+```bash
+./execpython.sh <path/to/pythonscript/>add_variant_depth.py <Input_Directory_snp.vcf> <Input_Directory_bcf.vcf> <Output_Directory>
 ```

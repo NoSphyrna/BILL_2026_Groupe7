@@ -50,32 +50,46 @@ for rec_snp, rec_bcf in zip(snp_vcf_in.fetch(), bcf_vcf_in.fetch()):
     key_bcf = (rec_bcf.chrom, rec_bcf.pos)
     if key_snp != key_bcf:
         raise RuntimeError(
-            f"Décalage entre deux lignes : snp :", key_snp, " bcf :", key_bcf
-        )
-    nb_var = safe_len(rec_snp.alleles)
-    if nb_var > safe_len(rec_bcf.alleles):
-        print(
-            "Warning : alts in first input files are greater than alts in second inut files :",
+            f"ERROR :Décalage entre deux lignes : snp file (",
+            snp_input_file,
+            ") at pos :",
             key_snp,
+            " bcf file (",
+            bcf_input_file,
+            ") at pos :",
+            key_bcf,
         )
-
-    # Here, the file is supposed to have only one sample (not merged)
+        # Here, the file is supposed to have only one sample (not merged)
     if len(rec_snp.samples.keys()) > 1:
-        raise RuntimeError("Too many samples in first input file")
+        raise RuntimeError("Too many samples in first input file(", snp_input_file, ")")
     if len(rec_bcf.samples.keys()) > 1:
-        raise RuntimeError("Too many samples in second input file")
+        raise RuntimeError(
+            "Too many samples in second input file(", bcf_input_file, ")"
+        )
     if len(rec_snp.samples.keys()) == 0:
-        raise RuntimeError("No samples in first input file")
+        raise RuntimeError("No samples in first input file(", snp_input_file, ")")
     if len(rec_bcf.samples.keys()) == 0:
-        raise RuntimeError("No samples in second input file")
+        raise RuntimeError("No samples in second input file(", bcf_input_file, ")")
 
     # Get the depth (DP) and allelic depth (AD) from second file input (raw vcf from bcftool mpileup)
     bcf_sample_name = rec_bcf.samples.keys()[0]
     dp = int(rec_bcf.samples[bcf_sample_name]["DP"])
     ad = tuple(rec_bcf.samples[bcf_sample_name]["AD"])
-
+    snp_nb_var = safe_len(rec_snp.alleles)
+    bcf_nb_var = safe_len(rec_bcf.alleles)
+    if snp_nb_var > bcf_nb_var:
+        ad = tuple(list(ad) + [0] * (snp_nb_var - bcf_nb_var))
+        print(
+            "WARNING : alts in first input file (",
+            snp_input_file,
+            ") are greater than alts in second input file (",
+            bcf_input_file,
+            ") at position :",
+            key_snp,
+        )
     # Keep only the longer alleles coresponding to the one present in the dirst input file (snp.vcf from medaka)
-    ad = tuple(ad[:nb_var])
+    else:
+        ad = tuple(ad[:snp_nb_var])
 
     # Add Depth and allelice depth to the record of the .snp.vcf file to write it in the outputfile
     snp_sample_name = rec_snp.samples.keys()[0]
