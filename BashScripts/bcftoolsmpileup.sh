@@ -6,6 +6,6 @@ fi
 
 for i in $(find "$1" -name '*.snp.vcf' -execdir basename '{}' .snp.vcf ';'); do
 	echo "Calling variant without INDEL over $1$i.aligned.sorted.bam to produce $2$i.bcf.vcf"
-	bcftools mpileup -I -o "$2""$i".bcf.vcf -f "$3" -a AD,DP -T "$1""$i".snp.vcf "$1""$i".aligned.sorted.bam
+	bcftools mpileup -I -d 100000 -o "$2""$i".bcf.vcf -f "$3" -a AD,DP -T "$1""$i".snp.vcf "$1""$i".aligned.sorted.bam
 	echo "Done"
 done
