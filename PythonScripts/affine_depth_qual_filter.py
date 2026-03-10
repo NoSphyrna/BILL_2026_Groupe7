@@ -49,13 +49,12 @@ parser.add_argument(
 args = parser.parse_args()
 
 
+input_file = args.input_file
 # Check if the inputs files are provided and has a .vcf extension
-if not sys.argv[1].lower().endswith(".vcf"):
+if not input_file.lower().endswith(".vcf"):
     print("\n[python] Error: Input file must have .vcf extension.")
     sys.exit(1)
 
-# We add a depth in the name of the output file to differenciate it
-input_file = args.input_file
 output_directory = args.output_directory
 depth_affine, qual_affine, min_depth, min_qual = args.filters
 if args.output_file:
@@ -99,5 +98,5 @@ for rec in vcf_in.fetch():
     else:
         nb_removed += 1
 
-print(f"[python] Number of variant removed in {input_file} : {nb_removed}/{nb_var}")
+print(f"[python] Number of position removed in {input_file} : {nb_removed}/{nb_var}")
 vcf_out.close()

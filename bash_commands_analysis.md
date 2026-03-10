@@ -148,7 +148,7 @@ To run it on all files in input folder (selected with extension)
 ```
 *Example :*
 ```bash
-./scripts/BILL_2026_Groupe7/BashScripts/plotpython.sh -f 1000 30 50 10 -a 0.1 50 BILL_2026_Groupe7/PythonScripts/plot_depth.py Analyses/P25_filtered/ Figures/P25_filtered/ .vcf
+./scripts/BILL_2026_Groupe7/BashScripts/plotpython.sh -f 1000 30 50 10 -a 0.1 50 scripts/BILL_2026_Groupe7/PythonScripts/plot_depth.py Analyses/P25_filtered/ Figures/P25_filtered/ .vcf
 ```
 
 
