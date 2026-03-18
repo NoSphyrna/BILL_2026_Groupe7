@@ -67,6 +67,7 @@ OUTPUT_DIR="$2"
 PREFIX="$3"
 EXTENSION="$4"
 # get files
+NUMBERS=()
 FILES=()
 GZ_FILES=()
 for file_number in "${FILE_NUMBERS[@]}"; do
@@ -85,6 +86,7 @@ for file_number in "${FILE_NUMBERS[@]}"; do
 		file=("$INPUT_DIR$PREFIX$file_number."*"$EXTENSION")
 		FILES+=("${file[0]}")
 		GZ_FILES+=("${file[0]}.gz")
+		NUMBERS+=("$file_number")
 
 	fi
 done
@@ -104,9 +106,9 @@ join_array() {
 	echo "$*"
 }
 
-NUMBERS=$(join_array - "${FILE_NUMBERS[@]}")
+OUTPUT_NUMBERS=$(join_array - "${NUMBERS[@]}")
 
-OUTPUT_FILE="$PREFIX""merged""$NUMBERS""$MILIEU""$EXTENSION"
+OUTPUT_FILE="$PREFIX""merged""$OUTPUT_NUMBERS""$MILIEU""$EXTENSION"
 
 echo "Calling \"bcftools merge\" to produce $OUTPUT_FILE"
 bcftools merge -o "$OUTPUT_DIR""$OUTPUT_FILE" --force-samples "${GZ_FILES[@]}"

@@ -1,6 +1,6 @@
 # Bash commands for analysis
 
-# Merge and concatvcf 
+# Merge and concat vcf 
 ## .snp.vcf files 
 ### Preparation :
 
@@ -151,6 +151,71 @@ To run it on all files in input folder (selected with extension)
 ./scripts/BILL_2026_Groupe7/BashScripts/plotpython.sh -f 1000 30 50 10 -a 0.1 50 scripts/BILL_2026_Groupe7/PythonScripts/plot_depth.py Analyses/P25_filtered/ Figures/P25_filtered/ .vcf
 ```
 
+# snpEff 
+
+## Preparation
+
+First we have to build the reference with snpEff build to be able to annotate after.
+
+To do that we have to create a folder "data" in the directory containing the file snpEff.configin the snpEff files usually its "snpeff-<version>/"
+
+In that folder data, create an architecture with the name of the reference as folder and copy the .gff or .gff3 in "genes.gff" and the fasta of the genome in "sequences.fa"
+
+```bash
+data
+└── KHV-U_trunc
+    ├── genes.gff
+    └── sequences.fa
+```
+
+Then run the build command here as an example for "KHV-U_trunc" (the noCheckCDS and protein is because we didn't put a cds.fa and a protein.fa in data, -v is for verbose and -gff3 is because the genes.gff was a .gff3 file.
+
+```bash
+snpEff build -gff3 -v -noCheckCds -noCheckProtein KHV-U_trunc
+```
+and it should create these files in the data directory :
+
+```bash
+data
+└── KHV-U_trunc
+    ├── genes.gff
+    ├── sequence.bin
+    ├── sequences.fa
+    └── snpEffectPredictor.bin
+```
+
+## Run snpEff on a vcf :
+
+here $SNPEFF corrspond to the path to the snpEff.config file
+
+```bash
+snpEff ann -config $SNPEFF_DIR/snpEff.config [-stats rapport.html -noStats] KHV-U_trunc input.vcf > output.vcf
+```
+## automatisation
+
+A script that apply snpEff on all files in the input directory with the extension, with -noStats and the snpEff.config in the snpeff_dir as config file with the reference name (from the previous snpEff build)
+
+```bash
+./BILL_2026_Groupe7/BashScripts/snpeff.sh <INPUT_DIR> <OUTPUT_DIR> <SNPEFF_DIR> <extension> <reference>
+```
+*example:*
+```bash
+./BILL_2026_Groupe7/BashScripts/snpeff.sh Analyses/P27_filtered/ Analyses/P27_ann/ $SNPEFF_DIR 50.0.vcf KHV-U_trunc
+```
+
+# Difference between passes
+
+## Apply bcftools isec between two passages
+
+bcftoolsisec.sh si a script that takes the input files of both passages to compare and perform a bcftools isec on each populations (1, 2, ... , 10) with it equivalent in the other passage and creates directories (1, 2, ..., 10) in the given output directory where the results of each bcftools isec is stored and renamed with "uniq" and "shared" extension for SNPs present only in one passage and in both respectively
+
+```bash
+bcftoolsisec.sh <INPUT_DIRECTORY1> <INPUT_DIRECTORY2> <OUTPUT_DIRECTORY> extension
+```
+*example :*
+```bash
+./BILL_2026_Groupe7/BashScripts/bcftoolsisec.sh Analyses/P25_filtered/ Analyses/P27_filtered/ Analyses/P25-P27_isec/ 50.0.vcf
+```
 
 # SURVIVOR
 ## Merge sniffles.vcf files - for structural variants (indels, dupplication)
