@@ -67,13 +67,13 @@ for file in "${FILES[@]}"; do
 		echo "Calling python $PYTHON_SCRIPT over $file to filter it and produce $OUTPUT_DIR$filename.filtered{depth_affine}_{qual_affine}_{min_depth}_{min_qual}.vcf"
 		python "$PYTHON_SCRIPT" "${FILTERS[@]}" "$file" "$OUTPUT_DIR"
 		echo "Done"
-		affine_files=("$OUTPUT_DIR$filename".filtered*.vcf)
+		affine_files=("$OUTPUT_DIR$filename"*filtered*.vcf)
 		affine_file="${affine_files[0]}"
 		if [ ${#affine_files[@]} -ne 1 ]; then
 			echo "[Error] ${#affine_files[@]} files found, but expected only one"
 			exit 1
 		fi
-		echo "Calling python $PYTHON_SCRIPT_AF over $affine_file to filter it and produce $affine_file.af{min_vaf}_{min_ad}.vcf"
+		echo "Calling python $PYTHON_SCRIPT_AF over $affine_file to filter it and produce $OUTPUT_DIR$(basename "$affine_file" ".vcf").af{min_vaf}_{min_ad}.vcf"
 		python "$PYTHON_SCRIPT_AF" "${ALLELIC_FILTERS[@]}" "$affine_file" "$OUTPUT_DIR"
 		echo "Done"
 		echo "Removing $affine_file"
