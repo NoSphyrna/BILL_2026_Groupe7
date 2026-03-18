@@ -56,7 +56,7 @@ done
 
 shift $((OPTIND - 1))
 
-if [ "$#" -ne 4 ] || ! [ -d "$1" ] || ! [ -d "$2" ]; then
+if [ "$#" -ne 4 ] || ! [ -d "$1" ]; then
 
 	echo "Remaining args:" "$@"
 	usage
@@ -66,6 +66,8 @@ INPUT_DIR="$1"
 OUTPUT_DIR="$2"
 PREFIX="$3"
 EXTENSION="$4"
+
+mkdir -p "$OUTPUT_DIR"
 # get files
 NUMBERS=()
 FILES=()

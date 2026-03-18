@@ -37,7 +37,7 @@ done
 
 shift $((OPTIND - 1))
 
-if [ "$#" -ne 4 ] || ! [ -d "$2" ] || ! [ -d "$3" ]; then
+if [ "$#" -ne 4 ] || ! [ -d "$2" ]; then
 
 	echo "Remaining args:" "$@"
 	usage
@@ -47,6 +47,10 @@ PYTHON_SCRIPT="$1"
 INPUT_DIR="$2"
 OUTPUT_DIR="$3"
 EXTENSION="$4"
+
+# create directory if it doesn't exists
+mkdir -p "$OUTPUT_DIR"
+
 # get files
 FILES=("$INPUT_DIR"*"$EXTENSION")
 

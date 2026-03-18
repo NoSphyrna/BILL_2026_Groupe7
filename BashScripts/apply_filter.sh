@@ -4,7 +4,7 @@
 
 FILTERS=()
 ALLELIC_FILTERS=()
-OUTPUT_EXTENSION=()
+OUTPUT_EXTENSION=""
 
 # ========= Help function ===========
 usage() {
@@ -40,7 +40,7 @@ done
 
 shift $((OPTIND - 1))
 
-if [ "$#" -ne 4 ] || ! [ -d "$2" ] || ! [ -d "$3" ]; then
+if [ "$#" -ne 4 ] || ! [ -d "$2" ]; then
 	usage
 fi
 
@@ -48,6 +48,8 @@ PYTHON_SCRIPT="$1"
 INPUT_DIR="$2"
 OUTPUT_DIR="$3"
 EXTENSION="$4"
+
+mkdir -p "$OUTPUT_DIR"
 # get files
 FILES=("$INPUT_DIR"*"$EXTENSION")
 
