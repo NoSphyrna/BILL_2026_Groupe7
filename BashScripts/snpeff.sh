@@ -41,7 +41,7 @@ FILES=("$INPUT_DIR"*"$EXTENSION")
 
 for file in "${FILES[@]}"; do
 	output_file="$(basename "$file" ".vcf")"".ann.vcf"
-	echo "Calling snpeff ann over $file to produce $OUTPUT_DIR/$output_file"
-	snpEff ann -config "$SNPEFF_DIR"/snpEff.config -noStats "$REFERENCE" "$file" >"$OUTPUT_DIR/$output_file"
+	echo "Calling snpeff ann over $file to produce $OUTPUT_DIR$output_file"
+	snpEff ann -config "$SNPEFF_DIR"/snpEff.config -noStats "$REFERENCE" "$file" >"$OUTPUT_DIR$output_file"
 	echo "Done"
 done
